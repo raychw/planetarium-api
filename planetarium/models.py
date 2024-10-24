@@ -1,6 +1,5 @@
 from django.db import models
-
-from planetarium_service import settings
+from django.contrib.auth.models import User
 
 
 class AstronomyShow(models.Model):
@@ -26,7 +25,7 @@ class ShowSession(models.Model):
 
 class Reservation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class Ticket(models.Model):
