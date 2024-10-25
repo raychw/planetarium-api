@@ -24,6 +24,13 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
     queryset = AstronomyShow.objects.all()
     serializer_class = AstronomyShowSerializer
 
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.action in ("list", "retrieve"):
+            queryset = queryset.select_related("show_theme")
+        return queryset
+
+
     def get_serializer_class(self):
         if self.action == "list":
             return AstronomyShowListSerializer
