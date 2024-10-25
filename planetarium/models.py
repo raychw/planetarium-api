@@ -3,19 +3,21 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class AstronomyShow(models.Model):
-    title = models.CharField(max_length=255, unique=True)
-    description = models.TextField(blank=True, null=True)
-
-    def __str__(self):
-        return self.title
-
 
 class ShowTheme(models.Model):
     name = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
         return self.name
+
+
+class AstronomyShow(models.Model):
+    title = models.CharField(max_length=255, unique=True)
+    show_teme = models.ForeignKey("ShowTheme", on_delete=models.CASCADE)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.title
 
 
 class PlanetariumDome(models.Model):
@@ -43,7 +45,7 @@ class ShowSession(models.Model):
     show_time = models.DateTimeField()
 
     def __str__(self):
-        return self.astronomy_show.title + "" + str(self.show_time)
+        return self.astronomy_show.title + " " + str(self.show_time)
 
 
 class Reservation(models.Model):
@@ -113,7 +115,8 @@ class Ticket(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["show_session", "row", "seat"], name="unique_ticket_per_session"
+                fields=["show_session", "row", "seat"],
+                name="unique_ticket_per_session"
             )
         ]
         ordering = ["row", "seat"]

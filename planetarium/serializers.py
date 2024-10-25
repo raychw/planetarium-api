@@ -16,6 +16,7 @@ class AstronomyShowSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "title",
+            "show_teme",
             "description",
         )
 
