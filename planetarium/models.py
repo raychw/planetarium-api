@@ -12,7 +12,7 @@ class ShowTheme(models.Model):
 
 class AstronomyShow(models.Model):
     title = models.CharField(max_length=255, unique=True)
-    show_teme = models.ForeignKey("ShowTheme", on_delete=models.CASCADE)
+    show_theme = models.ForeignKey("ShowTheme", on_delete=models.CASCADE)
     description = models.TextField(blank=True, null=True)
 
     def __str__(self):
