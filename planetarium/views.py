@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from rest_framework import viewsets
 
 from planetarium.models import (
@@ -27,15 +29,15 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         title = self.request.query_params.get("title")
-        show_theme = self.request.query_params.get("show_theme")
+        show_theme_id = self.request.query_params.get("show_theme")
 
         queryset = self.queryset
 
         if title:
             queryset = queryset.filter(title__icontains=title)
 
-        if show_theme:
-            queryset = queryset.filter(show_theme__name__icontains=show_theme)
+        if show_theme_id:
+            queryset = queryset.filter(show_theme_id=show_theme_id)
 
         return queryset.distinct()
 
@@ -73,13 +75,22 @@ class ReservationViewSet(viewsets.ModelViewSet):
 
 
 class ShowSessionViewSet(viewsets.ModelViewSet):
-    queryset = ShowSession.objects.all()
+    queryset = ShowSession.objects.select_related("astronomy_show", "planetarium_dome")
     serializer_class = ShowSessionSerializer
 
     def get_queryset(self):
+        date = self.request.query_params.get("date")
+        astronomy_show_id_str = self.request.query_params.get("astronomy_show")
+
         queryset = self.queryset
-        if self.action in ("list", "retrieve"):
-            queryset = queryset.prefetch_related("astronomy_show", "planetarium_dome")
+
+        if date:
+            date = datetime.strptime(date, "%Y-%m-%d").date()
+            queryset = queryset.filter(show_time__date=date)
+
+        if astronomy_show_id_str:
+            queryset = queryset.filter(movie_id=int(astronomy_show_id_str))
+
         return queryset
 
 
