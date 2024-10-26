@@ -150,8 +150,8 @@ class ReservationSerializer(serializers.ModelSerializer):
         model = Reservation
         fields = (
             "id",
-            "tickets",
             "created_at",
+            "tickets",
         )
 
     def create(self, validated_data):
