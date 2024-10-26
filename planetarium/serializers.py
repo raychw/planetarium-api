@@ -89,13 +89,15 @@ class ShowSessionListSerializer(ShowSessionSerializer):
     planetarium_dome = serializers.SlugRelatedField(
         many=False, read_only=True, slug_field="name"
     )
+    tickets_available = serializers.IntegerField(read_only=True)
     class Meta:
         model = ShowSession
         fields = (
             "id",
             "astronomy_show",
             "planetarium_dome",
-            "show_time"
+            "show_time",
+            "tickets_available",
         )
 
 
