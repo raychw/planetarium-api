@@ -1,6 +1,17 @@
+import os
+import uuid
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils.text import slugify
+
+
+def movie_image_file_path(instance, filename):
+    _, extension = os.path.splitext(filename)
+    filename = f"{slugify(instance.title)}-{uuid.uuid4()}{extension}"
+
+    return os.path.join("uploads/movies/", filename)
 
 
 class ShowTheme(models.Model):
@@ -14,6 +25,10 @@ class AstronomyShow(models.Model):
     title = models.CharField(max_length=255, unique=True)
     show_theme = models.ForeignKey("ShowTheme", on_delete=models.CASCADE)
     description = models.TextField(blank=True, null=True)
+    image = models.ImageField(blank=True, null=True, upload_to=movie_image_file_path)
+
+    class Meta:
+        ordering = ["title"]
 
     def __str__(self):
         return self.title
@@ -42,6 +57,9 @@ class ShowSession(models.Model):
         on_delete=models.CASCADE
     )
     show_time = models.DateTimeField()
+
+    class Meta:
+        ordering = ["-show_time"]
 
     def __str__(self):
         return self.astronomy_show.title + " " + str(self.show_time)
@@ -113,10 +131,5 @@ class Ticket(models.Model):
         )
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["show_session", "row", "seat"],
-                name="unique_ticket_per_session"
-            )
-        ]
+        unique_together = ("movie_session", "row", "seat")
         ordering = ["row", "seat"]
