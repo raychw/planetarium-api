@@ -1,9 +1,11 @@
 from datetime import datetime
 
 from django.db.models import F, Count
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.response import Response
 
 from planetarium.permissions import IsAdminOrIfAuthenticatedReadOnly
 from planetarium.models import (
@@ -17,6 +19,7 @@ from planetarium.serializers import (
     AstronomyShowSerializer,
     AstronomyShowListSerializer,
     AstronomyShowDetailSerializer,
+    AstronomyShowImageSerializer,
     PlanetariumDomeSerializer,
     ReservationSerializer,
     ReservationListSerializer,
@@ -47,12 +50,30 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
 
         return queryset.distinct()
 
+    @action(
+        methods=["POST"],
+        detail=True,
+        url_path="upload-image",
+        permission_classes=[IsAdminUser],
+    )
+    def upload_image(self, request, pk=None):
+        """Endpoint for uploading image to specific movie"""
+        astronomy_show = self.get_object()
+        serializer = self.get_serializer(astronomy_show, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get_serializer_class(self):
         if self.action == "list":
             return AstronomyShowListSerializer
         if self.action == "retrieve":
             return AstronomyShowDetailSerializer
+        if self.action == "upload_image":
+            return AstronomyShowImageSerializer
         return AstronomyShowSerializer
 
 
