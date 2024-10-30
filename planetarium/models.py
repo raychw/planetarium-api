@@ -7,7 +7,7 @@ from django.db import models
 from django.utils.text import slugify
 
 
-def movie_image_file_path(instance, filename):
+def astronomy_show_image_file_path(instance, filename):
     _, extension = os.path.splitext(filename)
     filename = f"{slugify(instance.title)}-{uuid.uuid4()}{extension}"
 
@@ -25,7 +25,7 @@ class AstronomyShow(models.Model):
     title = models.CharField(max_length=255, unique=True)
     show_theme = models.ForeignKey("ShowTheme", on_delete=models.CASCADE)
     description = models.TextField(blank=True, null=True)
-    image = models.ImageField(blank=True, null=True, upload_to=movie_image_file_path)
+    image = models.ImageField(blank=True, null=True, upload_to=astronomy_show_image_file_path)
 
     class Meta:
         ordering = ["title"]
