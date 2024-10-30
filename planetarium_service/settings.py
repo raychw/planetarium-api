@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "planetarium",
     "user",
     "rest_framework.authtoken",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -138,5 +139,6 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "PAGE_SIZE": 10
 }
