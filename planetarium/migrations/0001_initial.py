@@ -30,7 +30,8 @@ class Migration(migrations.Migration):
                     models.ImageField(
                         blank=True,
                         null=True,
-                        upload_to=planetarium.models.astronomy_show_image_file_path,
+                        upload_to=planetarium.models.
+                        astronomy_show_image_file_path,
                     ),
                 ),
             ],

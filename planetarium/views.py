@@ -89,7 +89,6 @@ class AstronomyShowViewSet(
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
-
     def get_serializer_class(self):
         if self.action == "list":
             return AstronomyShowListSerializer
@@ -140,7 +139,8 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
         .select_related("astronomy_show", "planetarium_dome")
         .annotate(
             tickets_available=(
-                    F("planetarium_dome__rows") * F("planetarium_dome__seats_in_row")
+                    F("planetarium_dome__rows")
+                    * F("planetarium_dome__seats_in_row")
                     - Count("tickets")
             )
         )

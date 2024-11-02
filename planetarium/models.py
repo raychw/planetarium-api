@@ -23,9 +23,17 @@ class ShowTheme(models.Model):
 
 class AstronomyShow(models.Model):
     title = models.CharField(max_length=255, unique=True)
-    themes = models.ManyToManyField(ShowTheme, related_name="astronomy_shows", blank=True)
+    themes = models.ManyToManyField(
+        ShowTheme,
+        related_name="astronomy_shows",
+        blank=True
+    )
     description = models.TextField(blank=True, null=True)
-    image = models.ImageField(blank=True, null=True, upload_to=astronomy_show_image_file_path)
+    image = models.ImageField(
+        blank=True,
+        null=True,
+        upload_to=astronomy_show_image_file_path
+    )
 
     class Meta:
         ordering = ["title"]
@@ -80,13 +88,22 @@ class Reservation(models.Model):
 class Ticket(models.Model):
     row = models.IntegerField()
     seat = models.IntegerField()
-    show_session = models.ForeignKey(ShowSession, on_delete=models.CASCADE, related_name="tickets")
-    reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE, related_name="tickets")
-
+    show_session = models.ForeignKey(
+        ShowSession,
+        on_delete=models.CASCADE,
+        related_name="tickets"
+    )
+    reservation = models.ForeignKey(
+        Reservation,
+        on_delete=models.CASCADE,
+        related_name="tickets"
+    )
 
     @staticmethod
     def validate_ticket(row, seat, cinema_hall, error_to_raise):
-        for ticket_attr_value, ticket_attr_name, planetarium_dome_attr_name in [
+        for (ticket_attr_value,
+             ticket_attr_name,
+             planetarium_dome_attr_name) in [
             (row, "row", "rows"),
             (seat, "seat", "seats_in_row"),
         ]:
@@ -95,8 +112,8 @@ class Ticket(models.Model):
                 raise error_to_raise(
                     {
                         ticket_attr_name: f"{ticket_attr_name} "
-                                          f"number must be in available range: "
-                                          f"(1, {count_attrs})"
+                                          f"number must be in available range:"
+                                          f" (1, {count_attrs})"
                     }
                 )
 
@@ -105,7 +122,7 @@ class Ticket(models.Model):
             self.row,
             self.seat,
             self.show_session.planetarium_dome,
-                ValidationError,
+            ValidationError,
         )
 
     def save(

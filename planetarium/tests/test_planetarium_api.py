@@ -8,8 +8,14 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from planetarium.models import AstronomyShow, PlanetariumDome, ShowSession, ShowTheme
-from planetarium.serializers import AstronomyShowListSerializer, AstronomyShowDetailSerializer
+from planetarium.models import (
+    AstronomyShow,
+    PlanetariumDome,
+    ShowSession,
+    ShowTheme
+)
+from planetarium.serializers import (AstronomyShowListSerializer,
+                                     AstronomyShowDetailSerializer)
 
 ASTRONOMY_SHOW_URL = reverse("planetarium:astronomyshow-list")
 SHOW_SESSION_URL = reverse("planetarium:showsession-list")
@@ -40,11 +46,17 @@ def sample_show_session(**params):
 
 
 def image_upload_url(astronomy_show_id):
-    return reverse("planetarium:astronomyshow-upload-image", args=[astronomy_show_id])
+    return reverse(
+        "planetarium:astronomyshow-upload-image",
+        args=[astronomy_show_id]
+    )
 
 
 def detail_url(astronomy_show_id):
-    return reverse("planetarium:astronomyshow-detail", args=[astronomy_show_id])
+    return reverse(
+        "planetarium:astronomyshow-detail",
+        args=[astronomy_show_id]
+    )
 
 
 class UnauthenticatedAstronomyShowApiTests(TestCase):
@@ -85,7 +97,9 @@ class AuthenticatedAstronomyShowApiTests(TestCase):
         astronomy_show1.themes.add(theme1)
         astronomy_show2.themes.add(theme2)
 
-        astronomy_show3 = sample_astronomy_show(title="Astronomy Show without themes")
+        astronomy_show3 = sample_astronomy_show(
+            title="Astronomy Show without themes"
+        )
 
         res = self.client.get(
             ASTRONOMY_SHOW_URL, {"themes": f"{theme1.id},{theme2.id}"}
@@ -183,7 +197,9 @@ class AstronomyShowImageUploadTests(TestCase):
         )
         self.client.force_authenticate(self.user)
         self.astronomy_show = sample_astronomy_show()
-        self.show_session = sample_show_session(astronomy_show=self.astronomy_show)
+        self.show_session = sample_show_session(
+            astronomy_show=self.astronomy_show
+        )
 
     def tearDown(self):
         self.astronomy_show.image.delete()
@@ -276,4 +292,6 @@ class AstronomyShowImageUploadTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
-        self.assertTrue(AstronomyShow.objects.filter(id=astronomy_show.id).exists())
+        self.assertTrue(AstronomyShow.objects.filter(
+            id=astronomy_show.id).exists()
+            )

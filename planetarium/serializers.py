@@ -98,6 +98,7 @@ class ShowSessionListSerializer(ShowSessionSerializer):
         many=False, read_only=True, slug_field="name"
     )
     tickets_available = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = ShowSession
         fields = (

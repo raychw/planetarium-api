@@ -19,7 +19,8 @@ class Migration(migrations.Migration):
             model_name="reservation",
             name="user",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL
             ),
         ),
         migrations.AddField(
@@ -42,7 +43,9 @@ class Migration(migrations.Migration):
             model_name="astronomyshow",
             name="themes",
             field=models.ManyToManyField(
-                blank=True, related_name="astronomy_shows", to="planetarium.showtheme"
+                blank=True,
+                related_name="astronomy_shows",
+                to="planetarium.showtheme"
             ),
         ),
         migrations.AddField(
