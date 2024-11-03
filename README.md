@@ -54,5 +54,3 @@ ___
 * Adding show sessions
 * Filtering astronomy shows by title and themes
 * Filtering show sessions by date
-
-
